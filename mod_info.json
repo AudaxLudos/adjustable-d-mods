@@ -1,0 +1,18 @@
+{
+    "id": "adjustabledmods",
+    "name": "Adjustable D-Mods",
+    "author": "Audax",
+    "version": "0.0.1",
+    "description": "A mod for Starsector that allows the player to install or remove s-mods.",
+    "gameVersion": "0.97a",
+    "jars": [
+        "AdjustableDMods.jar"
+    ],
+    "modPlugin": "adjustabledmods.ModPlugin",
+    "dependencies": [
+        {
+            "id": "lunalib",
+            "name": "LunaLib"
+        }
+    ]
+}

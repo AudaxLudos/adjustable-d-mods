@@ -1,0 +1,12 @@
+{
+    "masterVersionFile": "https://raw.githubusercontent.com/AudaxLudos/adjustable-s-mods/main/AdjustableSMods.version",
+    "modName": "Adjustable S-Mods",
+    "modVersion": {
+        "major": 1,
+        "minor": 0,
+        "patch": 3
+    },
+    "modThreadId": 0,
+    "directDownloadURL": "https://github.com/AudaxLudos/adjustable-s-mods/releases",
+    "changelogURL": "https://raw.githubusercontent.com/AudaxLudos/adjustable-s-mods/main/CHANGELOG.txt"
+}
