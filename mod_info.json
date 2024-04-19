@@ -2,7 +2,7 @@
     "id": "adjustabledmods",
     "name": "Adjustable D-Mods",
     "author": "Audax",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A mod for Starsector that allows the player to install or remove s-mods.",
     "gameVersion": "0.97a",
     "jars": [
