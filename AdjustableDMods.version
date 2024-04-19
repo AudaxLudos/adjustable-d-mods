@@ -1,12 +1,12 @@
 {
-    "masterVersionFile": "https://raw.githubusercontent.com/AudaxLudos/adjustable-s-mods/main/AdjustableSMods.version",
-    "modName": "Adjustable S-Mods",
+    "masterVersionFile": "https://raw.githubusercontent.com/AudaxLudos/adjustable-d-mods/main/AdjustableDMods.version",
+    "modName": "Adjustable D-Mods",
     "modVersion": {
         "major": 1,
         "minor": 0,
-        "patch": 3
+        "patch": 0
     },
     "modThreadId": 0,
-    "directDownloadURL": "https://github.com/AudaxLudos/adjustable-s-mods/releases",
-    "changelogURL": "https://raw.githubusercontent.com/AudaxLudos/adjustable-s-mods/main/CHANGELOG.txt"
+    "directDownloadURL": "https://github.com/AudaxLudos/adjustable-d-mods/releases",
+    "changelogURL": "https://raw.githubusercontent.com/AudaxLudos/adjustable-d-mods/main/CHANGELOG.txt"
 }

@@ -1,2 +1,8 @@
+### 1.0.0
+
+- Update adding and removing d-mod implementations
+- Add installing and removing d-mods feature
+- Add initial mod files
+
 ### 0.0.1
 - Add initial ide files
