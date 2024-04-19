@@ -1,8 +1,8 @@
 package adjustabledmods.ui;
 
-import adjustabledmods.ui.plugins.ConfirmPlugin;
-import adjustabledmods.ui.plugins.SelectInstallablePlugin;
-import adjustabledmods.ui.plugins.SelectRemovablePlugin;
+import adjustabledmods.ui.plugins.BorderedPanelPlugin;
+import adjustabledmods.ui.plugins.ConfirmButtonPlugin;
+import adjustabledmods.ui.plugins.SelectButtonPlugin;
 import adjustabledmods.ui.tooltips.DModTooltip;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -10,16 +10,16 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.ButtonAPI;
-import com.fs.starfarer.api.ui.CustomPanelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
 import lunalib.lunaRefit.BaseRefitButton;
 
-import java.util.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class RefitButtonUI extends BaseRefitButton {
     public final float WIDTH = 800f;
@@ -83,33 +83,18 @@ public class RefitButtonUI extends BaseRefitButton {
         mPanel.addUIElement(mElement);
 
         float columnWidth = WIDTH / 2f - 20f;
+        float rowHeight = 300f;
 
         // installable d-mods ui
-        CustomPanelAPI installableDModsHeaderPanel = mPanel.createCustomPanel(columnWidth, 25f, null);
-        TooltipMakerAPI installableDModsHeaderElement = installableDModsHeaderPanel.createUIElement(columnWidth, 25f, false);
-        installableDModsHeaderElement.addSectionHeading("Installable D-Mods", Alignment.MID, 0f);
-        installableDModsHeaderPanel.addUIElement(installableDModsHeaderElement);
-        mElement.addCustom(installableDModsHeaderPanel, 0f).getPosition().inTL(10f, 10f);
+        CustomPanelAPI installableDModsContainerPanel = mPanel.createCustomPanel(columnWidth, rowHeight, new BorderedPanelPlugin());
+        TooltipMakerAPI installableDModsContainerElement = installableDModsContainerPanel.createUIElement(columnWidth, rowHeight, false);
+        installableDModsContainerElement.addSectionHeading("Installable D-Mods", Alignment.MID, 0f);
+        installableDModsContainerElement.addSpacer(3f);
 
-        CustomPanelAPI installableDModsPanel = mPanel.createCustomPanel(columnWidth, 305f, null);
-        TooltipMakerAPI installableDModsElement = installableDModsPanel.createUIElement(columnWidth, 305f, true);
+        CustomPanelAPI installableDModsPanel = mPanel.createCustomPanel(columnWidth, rowHeight - 25f, null);
+        TooltipMakerAPI installableDModsElement = installableDModsPanel.createUIElement(columnWidth, rowHeight - 25f, true);
 
-        List<HullModSpecAPI> installableDMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
-        installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));
-        if (DModManager.getNumDMods(variant, Tags.HULLMOD_DAMAGE_STRUCT) > 0)
-            installableDMods = DModManager.getModsWithoutTags(installableDMods, Tags.HULLMOD_DAMAGE_STRUCT);
-        if (variant.getHullSpec().getFighterBays() < 0)
-            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_FIGHTER_BAY_DAMAGE));
-        if (variant.getHullSpec().isPhase())
-            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
-        if (variant.isCarrier())
-            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
-        for (Iterator<HullModSpecAPI> itr = installableDMods.iterator(); itr.hasNext(); ) {
-            HullModSpecAPI spec = itr.next();
-            if (variant.getHullMods().contains(spec.getId())) {
-                itr.remove();
-            }
-        }
+        List<HullModSpecAPI> installableDMods = getInstallableDMods(variant, true);
         Collections.sort(installableDMods, new Comparator<HullModSpecAPI>() {
             public int compare(HullModSpecAPI o1, HullModSpecAPI o2) {
                 return o1.getDisplayName().compareTo(o2.getDisplayName());
@@ -117,91 +102,104 @@ public class RefitButtonUI extends BaseRefitButton {
         });
 
         for (HullModSpecAPI dMod : installableDMods) {
-            CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth, 50f, new SelectInstallablePlugin(this, variant));
-            TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth, 40f, false);
+            CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth - 4, 50f, new SelectButtonPlugin(this, variant, false));
+            TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth - 4, 40f, false);
             TooltipMakerAPI dModImage = dModNameElement.beginImageWithText(dMod.getSpriteName(), 40f);
             dModImage.addPara(dMod.getDisplayName(), Misc.getTextColor(), 0f);
             dModNameElement.addImageWithText(0f);
             dModNameElement.getPosition().inTL(-5f, 5f);
 
-            TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 50f, false);
-            ButtonAPI dModCheckBox = dModButtonElement.addAreaCheckbox("", dMod, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), columnWidth, 50f, 0f);
+            TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth - 4, 50f, false);
+            ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0,195,255, 190), new Color(0,0,0,255), Alignment.MID, CutStyle.NONE, columnWidth - 4, 50f, 0f);
+            dModButton.setHighlightBounceDown(false);
+            dModButton.setGlowBrightness(0.4f);
             dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
 
             dModPanel.addUIElement(dModButtonElement).inTL(-10f, 0f);
             dModPanel.addUIElement(dModNameElement);
 
             installableDModsElement.addCustom(dModPanel, 0f);
-            this.installableDModButtons.add(dModCheckBox);
+            this.installableDModButtons.add(dModButton);
         }
-        installableDModsPanel.addUIElement(installableDModsElement);
-        mElement.addCustom(installableDModsPanel, 0f).getPosition().belowMid(installableDModsHeaderPanel, 0f);
+        installableDModsPanel.addUIElement(installableDModsElement).inTL(-5f, 0f);
+        installableDModsContainerElement.addCustom(installableDModsPanel, 0f);
+
+        installableDModsContainerPanel.addUIElement(installableDModsContainerElement);
+        mElement.addCustom(installableDModsContainerPanel, 0f).getPosition().inTL(10f, 10f);
 
         // removable d-mods ui
-        CustomPanelAPI removableDModsHeaderPanel = mPanel.createCustomPanel(columnWidth, 25f, null);
-        TooltipMakerAPI removableDModsHeaderElement = removableDModsHeaderPanel.createUIElement(columnWidth, 25f, false);
-        removableDModsHeaderElement.addSectionHeading("Removable D-Mods", Alignment.MID, 0f);
-        removableDModsHeaderPanel.addUIElement(removableDModsHeaderElement);
-        mElement.addCustom(removableDModsHeaderPanel, 0f).getPosition().inTR(10f, 10f);
+        CustomPanelAPI removableDModsContainerPanel = mPanel.createCustomPanel(columnWidth, rowHeight, new BorderedPanelPlugin());
+        TooltipMakerAPI removableDModsContainerElement = removableDModsContainerPanel.createUIElement(columnWidth, rowHeight, false);
+        removableDModsContainerElement.addSectionHeading("Removable D-Mods", Alignment.MID, 0f);
+        removableDModsContainerElement.addSpacer(3f);
 
-        CustomPanelAPI removableDModsPanel = mPanel.createCustomPanel(columnWidth, 305f, null);
-        TooltipMakerAPI removableDModsElement = removableDModsPanel.createUIElement(columnWidth, 305f, true);
+        CustomPanelAPI removableDModsPanel = mPanel.createCustomPanel(columnWidth, rowHeight - 25f, null);
+        TooltipMakerAPI removableDModsElement = removableDModsPanel.createUIElement(columnWidth, rowHeight - 25f, true);
 
-        List<HullModSpecAPI> removableDMods = new ArrayList<>();
-        for (String hullmod : variant.getHullMods()) {
-            if (DModManager.getMod(hullmod) == null) {
-                continue;
-            }
-            if (DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE) ||
-                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) ||
-                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE_STRUCT) ||
-                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_FIGHTER_BAY_DAMAGE) ||
-                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE_PHASE) ||
-                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_CARRIER_ALWAYS)) {
-                removableDMods.add(DModManager.getMod(hullmod));
-            }
-        }
+        List<HullModSpecAPI> removableDMods = getInstalledDMods(variant);
         Collections.sort(removableDMods, new Comparator<HullModSpecAPI>() {
             public int compare(HullModSpecAPI o1, HullModSpecAPI o2) {
                 return o1.getDisplayName().compareTo(o2.getDisplayName());
             }
         });
 
-        for (HullModSpecAPI dMod : removableDMods) {
-            CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth, 50f, new SelectRemovablePlugin(this, variant));
-            TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth, 40f, false);
-            TooltipMakerAPI dModImage = dModNameElement.beginImageWithText(dMod.getSpriteName(), 40f);
-            dModImage.addPara(dMod.getDisplayName(), Misc.getTextColor(), 0f);
-            dModNameElement.addImageWithText(0f);
-            dModNameElement.getPosition().inTL(-5f, 5f);
+        if (removableDMods.isEmpty()) {
+            removableDModsElement.setParaOrbitronVeryLarge();
+            LabelAPI removableDModsText = removableDModsElement.addPara("No D-Mods built-in", 0f);
+            removableDModsText.getPosition().inTL(
+                    columnWidth / 2 - removableDModsText.computeTextWidth(removableDModsText.getText()) / 2,
+                    (rowHeight - 25f) / 2 - removableDModsText.computeTextHeight(removableDModsText.getText()) / 2
+            );
+        } else {
+            for (HullModSpecAPI dMod : removableDMods) {
+                CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth - 4, 50f, new SelectButtonPlugin(this, variant, true));
+                TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth - 4, 40f, false);
+                TooltipMakerAPI dModImage = dModNameElement.beginImageWithText(dMod.getSpriteName(), 40f);
+                dModImage.addPara(dMod.getDisplayName(), Misc.getTextColor(), 0f);
+                dModNameElement.addImageWithText(0f);
+                dModNameElement.getPosition().inTL(-5f, 5f);
 
-            TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 50f, false);
-            ButtonAPI dModCheckBox = dModButtonElement.addAreaCheckbox("", dMod, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), columnWidth, 50f, 0f);
-            dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
+                TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth - 4, 50f, false);
+                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth - 4, 50f, 0f);
+                dModButton.setHighlightBounceDown(false);
+                dModButton.setGlowBrightness(0.4f);
+                dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
 
-            dModPanel.addUIElement(dModButtonElement).inTL(-10f, 0f);
-            dModPanel.addUIElement(dModNameElement);
+                dModPanel.addUIElement(dModButtonElement).inTL(-10f, 0f);
+                dModPanel.addUIElement(dModNameElement);
 
-            removableDModsElement.addCustom(dModPanel, 0f);
-            this.removableDModButtons.add(dModCheckBox);
+                removableDModsElement.addCustom(dModPanel, 0f);
+                this.removableDModButtons.add(dModButton);
+            }
         }
-        removableDModsPanel.addUIElement(removableDModsElement);
-        mElement.addCustom(removableDModsPanel, 0f).getPosition().belowMid(removableDModsHeaderPanel, 0f);
+        removableDModsPanel.addUIElement(removableDModsElement).inTL(-5f, 0f);;
+        removableDModsContainerElement.addCustom(removableDModsPanel, 0f);
 
-        // Footer buttons
-        CustomPanelAPI footerPanel = mPanel.createCustomPanel(WIDTH, 200f, new ConfirmPlugin(this, variant));
-        TooltipMakerAPI footerElement = footerPanel.createUIElement(WIDTH, 200f, false);
-        footerElement.setButtonFontOrbitron20();
-        ButtonAPI installDModButton = footerElement.addButton("Install D-Mod", "install", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
+        removableDModsContainerPanel.addUIElement(removableDModsContainerElement);
+        mElement.addCustom(removableDModsContainerPanel, 0f).getPosition().inTR(10f, 10f);
+
+//        // Footer buttons
+        CustomPanelAPI installableDModsFooterPanel = mPanel.createCustomPanel(columnWidth, 200f, new ConfirmButtonPlugin(this, variant));
+        TooltipMakerAPI installableDModsFooterElement = installableDModsFooterPanel.createUIElement(columnWidth, 200f, false);
+        installableDModsFooterElement.setButtonFontOrbitron20();
+        ButtonAPI installDModButton = installableDModsFooterElement.addButton("Install D-Mod", "install_selected", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
         installDModButton.setEnabled(this.selectedInstallableDMod != null);
         this.selectedInstallableDModButton = installDModButton;
-        installDModButton.getPosition().inLMid(0f);
-        ButtonAPI removeDModButton = footerElement.addButton("Remove D-Mod", "remove", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
+        ButtonAPI addRandomDModButton = installableDModsFooterElement.addButton("Add Random D-Mod", "add_random", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
+        addRandomDModButton.getPosition().rightOfMid(installDModButton, 0f);
+        installableDModsFooterPanel.addUIElement(installableDModsFooterElement);
+        mElement.addCustom(installableDModsFooterPanel, 0f).getPosition().belowMid(installableDModsContainerPanel, 0f);
+
+        CustomPanelAPI removableDModsFooterPanel = mPanel.createCustomPanel(columnWidth, 200f, new ConfirmButtonPlugin(this, variant));
+        TooltipMakerAPI removableDModsFooterElement = removableDModsFooterPanel.createUIElement(columnWidth, 200f, false);
+        removableDModsFooterElement.setButtonFontOrbitron20();
+        ButtonAPI removeDModButton = removableDModsFooterElement.addButton("Remove D-Mod", "remove_selected", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
         removeDModButton.setEnabled(this.selectedRemovableDMod != null);
         this.selectedRemovableDModButton = removeDModButton;
-        removeDModButton.getPosition().inRMid(0f);
-        footerPanel.addUIElement(footerElement);
-        mElement.addCustom(footerPanel, 0f).getPosition().belowLeft(installableDModsPanel, 0f);
+        ButtonAPI removeAllDModsButton = removableDModsFooterElement.addButton("Remove All D-Mods", "remove_all", Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), 180f, 25f, 0f);
+        removeAllDModsButton.getPosition().rightOfMid(removeDModButton, 0f);
+        removableDModsFooterPanel.addUIElement(removableDModsFooterElement);
+        mElement.addCustom(removableDModsFooterPanel, 0f).getPosition().belowMid(removableDModsContainerPanel, 0f);
     }
 
     @Override
@@ -213,5 +211,45 @@ public class RefitButtonUI extends BaseRefitButton {
     @Override
     public boolean shouldShow(FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
         return super.shouldShow(member, variant, market);
+    }
+
+    public List<HullModSpecAPI> getInstallableDMods(ShipVariantAPI variant, boolean canAddDestroyedMods) {
+        List<HullModSpecAPI> installableDMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
+        if (canAddDestroyedMods)
+            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));
+
+        DModManager.removeUnsuitedMods(variant, installableDMods);
+
+        if (DModManager.getNumDMods(variant, Tags.HULLMOD_DAMAGE_STRUCT) > 0)
+            installableDMods = DModManager.getModsWithoutTags(installableDMods, Tags.HULLMOD_DAMAGE_STRUCT);
+        if (variant.getHullSpec().getFighterBays() < 0)
+            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_FIGHTER_BAY_DAMAGE));
+        if (variant.getHullSpec().isPhase())
+            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
+        if (variant.isCarrier())
+            installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
+
+        DModManager.removeModsAlreadyInVariant(variant, installableDMods);
+
+        return installableDMods;
+    }
+
+    public List<HullModSpecAPI> getInstalledDMods(ShipVariantAPI variant) {
+        List<HullModSpecAPI> installedDMods = new ArrayList<>();
+        for (String hullmod : variant.getHullMods()) {
+            if (DModManager.getMod(hullmod) == null) {
+                continue;
+            }
+            if (DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE) ||
+                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) ||
+                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE_STRUCT) ||
+                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_FIGHTER_BAY_DAMAGE) ||
+                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_DAMAGE_PHASE) ||
+                    DModManager.getMod(hullmod).hasTag(Tags.HULLMOD_CARRIER_ALWAYS)) {
+                installedDMods.add(DModManager.getMod(hullmod));
+            }
+        }
+        
+        return installedDMods;
     }
 }
