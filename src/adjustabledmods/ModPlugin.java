@@ -1,12 +1,12 @@
 package adjustabledmods;
 
-import adjustabledmods.ui.RefitButtonUI;
+import adjustabledmods.ui.DModRefitButton;
 import com.fs.starfarer.api.BaseModPlugin;
 import lunalib.lunaRefit.LunaRefitManager;
 
 public class ModPlugin extends BaseModPlugin {
     @Override
     public void onApplicationLoad() {
-        LunaRefitManager.addRefitButton(new RefitButtonUI());
+        LunaRefitManager.addRefitButton(new DModRefitButton());
     }
 }

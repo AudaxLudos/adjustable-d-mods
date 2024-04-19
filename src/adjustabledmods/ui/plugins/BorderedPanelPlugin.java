@@ -14,7 +14,8 @@ public class BorderedPanelPlugin extends BaseCustomUIPanelPlugin {
     public Color borderColor = Misc.getDarkPlayerColor();
     public float alpha = 1f;
 
-    public BorderedPanelPlugin() {}
+    public BorderedPanelPlugin() {
+    }
 
     public BorderedPanelPlugin(boolean renderBackground, Color backgroundColor, Color borderColor, float alpha) {
         this.renderBackground = renderBackground;
@@ -54,8 +55,7 @@ public class BorderedPanelPlugin extends BaseCustomUIPanelPlugin {
 
     @Override
     public void render(float alphaMult) {
-        if (position != null)
-        {
+        if (position != null) {
             Color c = borderColor;
             GL11.glPushMatrix();
 
@@ -78,10 +78,10 @@ public class BorderedPanelPlugin extends BaseCustomUIPanelPlugin {
             GL11.glBegin(GL11.GL_LINE_STRIP);
 
             GL11.glVertex2f(position.getX(), position.getY());
-            GL11.glVertex2f(position.getX(),  position.getY() +  position.getHeight());
-            GL11.glVertex2f(position.getX() +  position.getWidth(),  position.getY() +  position.getHeight());
-            GL11.glVertex2f(position.getX() +  position.getWidth(),  position.getY());
-            GL11.glVertex2f(position.getX(),  position.getY());
+            GL11.glVertex2f(position.getX(), position.getY() + position.getHeight());
+            GL11.glVertex2f(position.getX() + position.getWidth(), position.getY() + position.getHeight());
+            GL11.glVertex2f(position.getX() + position.getWidth(), position.getY());
+            GL11.glVertex2f(position.getX(), position.getY());
 
             GL11.glEnd();
             GL11.glPopMatrix();

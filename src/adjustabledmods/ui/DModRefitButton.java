@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class RefitButtonUI extends BaseRefitButton {
+public class DModRefitButton extends BaseRefitButton {
     public final float WIDTH = 800f;
     public final float HEIGHT = 405f;
     public List<ButtonAPI> installableDModButtons = new ArrayList<>();

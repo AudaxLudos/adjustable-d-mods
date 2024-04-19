@@ -1,6 +1,6 @@
 package adjustabledmods.ui.plugins;
 
-import adjustabledmods.ui.RefitButtonUI;
+import adjustabledmods.ui.DModRefitButton;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -9,16 +9,15 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.ButtonAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.util.Misc;
-import org.lwjgl.Sys;
 
 import java.util.List;
 
 public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
-    public RefitButtonUI refitButton;
+    public DModRefitButton refitButton;
     public ShipVariantAPI variant;
     public boolean isInstalled;
 
-    public SelectButtonPlugin(RefitButtonUI refitButton, ShipVariantAPI variant, boolean isInstalled) {
+    public SelectButtonPlugin(DModRefitButton refitButton, ShipVariantAPI variant, boolean isInstalled) {
         this.refitButton = refitButton;
         this.variant = variant;
         this.isInstalled = isInstalled;
@@ -66,7 +65,7 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         if (selectedHullModButton != null)
             selectedHullModButton.setEnabled(
                     (this.refitButton.selectedInstallableDMod != null || this.refitButton.selectedRemovableDMod != null)
-                    && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
-                    && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled));
+                            && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
+                            && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled));
     }
 }

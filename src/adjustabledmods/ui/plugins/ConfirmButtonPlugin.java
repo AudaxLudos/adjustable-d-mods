@@ -1,20 +1,19 @@
 package adjustabledmods.ui.plugins;
 
-import adjustabledmods.ui.RefitButtonUI;
+import adjustabledmods.ui.DModRefitButton;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
-import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import org.lwjgl.util.vector.Vector2f;
 
 public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
-    public RefitButtonUI refitButton;
+    public DModRefitButton refitButton;
     public ShipVariantAPI variant;
 
-    public ConfirmButtonPlugin(RefitButtonUI refitButton, ShipVariantAPI variant) {
+    public ConfirmButtonPlugin(DModRefitButton refitButton, ShipVariantAPI variant) {
         this.refitButton = refitButton;
         this.variant = variant;
     }
