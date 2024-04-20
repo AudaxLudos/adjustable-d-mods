@@ -119,15 +119,15 @@ public class DModRefitButton extends BaseRefitButton {
             );
         } else {
             for (HullModSpecAPI dMod : installableDMods) {
-                CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth - 4, 50f, new SelectButtonPlugin(this, variant, false));
-                TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth - 4, 40f, false);
+                CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth, 50f, new SelectButtonPlugin(this, variant, false));
+                TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth, 40f, false);
                 TooltipMakerAPI dModImage = dModNameElement.beginImageWithText(dMod.getSpriteName(), 40f);
                 dModImage.addPara(dMod.getDisplayName(), Misc.getTextColor(), 0f);
                 dModNameElement.addImageWithText(0f);
                 dModNameElement.getPosition().inTL(-5f, 5f);
 
-                TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth - 4, 50f, false);
-                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth - 4, 50f, 0f);
+                TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 50f, false);
+                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 50f, 0f);
                 dModButton.setHighlightBounceDown(false);
                 dModButton.setGlowBrightness(0.4f);
                 dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
@@ -170,15 +170,15 @@ public class DModRefitButton extends BaseRefitButton {
             );
         } else {
             for (HullModSpecAPI dMod : removableDMods) {
-                CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth - 4, 50f, new SelectButtonPlugin(this, variant, true));
-                TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth - 4, 40f, false);
+                CustomPanelAPI dModPanel = mPanel.createCustomPanel(columnWidth, 50f, new SelectButtonPlugin(this, variant, true));
+                TooltipMakerAPI dModNameElement = dModPanel.createUIElement(columnWidth, 40f, false);
                 TooltipMakerAPI dModImage = dModNameElement.beginImageWithText(dMod.getSpriteName(), 40f);
                 dModImage.addPara(dMod.getDisplayName(), Misc.getTextColor(), 0f);
                 dModNameElement.addImageWithText(0f);
                 dModNameElement.getPosition().inTL(-5f, 5f);
 
-                TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth - 4, 50f, false);
-                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth - 4, 50f, 0f);
+                TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 50f, false);
+                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 50f, 0f);
                 dModButton.setHighlightBounceDown(false);
                 dModButton.setGlowBrightness(0.4f);
                 dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);

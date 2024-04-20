@@ -3,7 +3,6 @@ package adjustabledmods.ui.plugins;
 import adjustabledmods.ui.DModRefitButton;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
-import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -30,9 +29,9 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
                 variant.removeSuppressedMod(spec.getId());
                 variant.addPermaMod(spec.getId(), false);
 
-                this.refitButton.closePanel();
+                refitButton.refreshVariant();
+                refitButton.closePanel();
                 Global.getSoundPlayer().playSound("ui_survey_xp_gain", 2f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
-                Global.getSector().getCampaignUI().showCoreUITab(CoreUITabId.REFIT);
             }
         } else if (buttonId == "remove_selected") {
             if (this.refitButton.selectedRemovableDMod != null) {
@@ -41,9 +40,9 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
                 DModManager.setDHull(variant);
                 DModManager.removeDMod(variant, spec.getId());
 
-                this.refitButton.closePanel();
+                refitButton.refreshVariant();
+                refitButton.closePanel();
                 Global.getSoundPlayer().playSound("ui_survey_xp_gain", 4f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
-                Global.getSector().getCampaignUI().showCoreUITab(CoreUITabId.REFIT);
             }
         }
     }
