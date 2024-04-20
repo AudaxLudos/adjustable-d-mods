@@ -1,3 +1,7 @@
+### 1.0.2
+- Release 1.0.2
+- Update code format and structure
+
 ### 1.0.1
 - Release 1.0.1
 - Update code format and structure
