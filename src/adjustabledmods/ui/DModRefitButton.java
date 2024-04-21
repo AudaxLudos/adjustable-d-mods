@@ -273,7 +273,7 @@ public class DModRefitButton extends BaseRefitButton {
 
         if (DModManager.getNumDMods(variant, Tags.HULLMOD_DAMAGE_STRUCT) > 0)
             installableDMods = DModManager.getModsWithoutTags(installableDMods, Tags.HULLMOD_DAMAGE_STRUCT);
-        if (variant.getHullSpec().getFighterBays() < 0)
+        if (variant.getHullSpec().getFighterBays() > 0)
             installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_FIGHTER_BAY_DAMAGE));
         if (variant.getHullSpec().isPhase())
             installableDMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
