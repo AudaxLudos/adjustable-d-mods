@@ -1,3 +1,7 @@
+### 1.0.3
+- Release 1.0.3
+- Fix bug carrier d-mods not showing up for carriers
+
 ### 1.0.2
 - Release 1.0.2
 - Update code format and structure
