@@ -1,5 +1,5 @@
-# Adjustable S-Mods
-A mod for Starsector that allows the player to install or remove s-mods.
+# Adjustable D-Mods
+A mod for Starsector that allows the player to install or remove d-mods.
 
 ## Credits
 <strong>Wispborne</strong>: for the starsector intellij mod template and the github action script.  
