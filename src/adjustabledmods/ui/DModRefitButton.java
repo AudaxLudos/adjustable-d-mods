@@ -25,8 +25,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DModRefitButton extends BaseRefitButton {
-    public final float WIDTH = 800f;
-    public final float HEIGHT = 405f;
+    public final float WIDTH = 760f;
+    public final float HEIGHT = 426f;
     public List<ButtonAPI> installableDModButtons = new ArrayList<>();
     public List<ButtonAPI> removableDModButtons = new ArrayList<>();
     public HullModSpecAPI selectedInstallableDMod = null;
@@ -89,7 +89,7 @@ public class DModRefitButton extends BaseRefitButton {
         TooltipMakerAPI mElement = mPanel.createUIElement(WIDTH, HEIGHT, false);
 
         float columnWidth = WIDTH / 2f - 20f;
-        float rowHeight = 300f;
+        float rowHeight = 320f;
 
         // installable d-mods ui
         CustomPanelAPI dModsContainerPanel = mPanel.createCustomPanel(WIDTH, rowHeight, null);
@@ -118,16 +118,16 @@ public class DModRefitButton extends BaseRefitButton {
                 dModNameElement.getPosition().setXAlignOffset(-8f).setYAlignOffset(2f);
 
                 TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 44f, false);
-                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 50f, 0f);
+                ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 44f, 0f);
                 dModButton.setHighlightBounceDown(false);
                 dModButton.setGlowBrightness(0.4f);
                 dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
                 dModButtonElement.getPosition().setXAlignOffset(-10f);
 
-                dModPanel.addUIElement(dModButtonElement).inTL(-10f, 0f);
+                dModPanel.addUIElement(dModButtonElement);
                 dModPanel.addUIElement(dModNameElement);
-
                 installableDModsElement.addCustom(dModPanel, 0f);
+
                 this.installableDModButtons.add(dModButton);
             }
         }
@@ -192,7 +192,7 @@ public class DModRefitButton extends BaseRefitButton {
         CustomPanelAPI installableDModsFooterPanel = mPanel.createCustomPanel(footerWidth, 200f, new ConfirmButtonPlugin(this, variant));
         TooltipMakerAPI installableDModsFooterElement = installableDModsFooterPanel.createUIElement(footerWidth, 200f, false);
         installableDModsFooterElement.addSpacer(10f);
-        this.costToInstallDModText = addCustomLabelledValue(installableDModsFooterElement, "Cost to add", Misc.getDGSCredits(0));
+        this.costToInstallDModText = addCustomLabelledValue(installableDModsFooterElement, "Cost to install", Misc.getDGSCredits(0));
         installableDModsFooterElement.addSpacer(10f);
         this.selectedInstallableDModButton = addCustomFooterButton(installableDModsFooterElement, "Add", "install_selected", this.selectedInstallableDMod != null, new AddDModTooltip(this, variant));
         installableDModsFooterPanel.addUIElement(installableDModsFooterElement);
@@ -202,14 +202,13 @@ public class DModRefitButton extends BaseRefitButton {
         TooltipMakerAPI dModsFooterTextElement = dModsFooterTextPanel.createUIElement(footerWidth, 200f, false);
         dModsFooterTextElement.addSpacer(10f);
         addCustomLabelledValue(dModsFooterTextElement, "Max d-mods allowed", DModManager.getNumDMods(variant) + " / " + DModManager.MAX_DMODS_FROM_COMBAT);
-        dModsFooterTextElement.addSpacer(10f);
         dModsFooterTextPanel.addUIElement(dModsFooterTextElement);
         mElement.addCustom(dModsFooterTextPanel, 0f).getPosition().rightOfMid(installableDModsFooterPanel, 0f);
 
         CustomPanelAPI removableDModsFooterPanel = mPanel.createCustomPanel(footerWidth, 200f, new ConfirmButtonPlugin(this, variant));
         TooltipMakerAPI removableDModsFooterElement = removableDModsFooterPanel.createUIElement(footerWidth, 200f, false);
         removableDModsFooterElement.addSpacer(10f);
-        this.costToRemoveDModText =  addCustomLabelledValue(removableDModsFooterElement, "Cost to remove", Misc.getDGSCredits(0));
+        this.costToRemoveDModText = addCustomLabelledValue(removableDModsFooterElement, "Cost to remove", Misc.getDGSCredits(0));
         removableDModsFooterElement.addSpacer(10f);
         this.selectedRemovableDModButton = addCustomFooterButton(removableDModsFooterElement, "Remove", "remove_selected", this.selectedRemovableDMod != null, new RemoveDModTooltip(this, variant));
         removableDModsFooterPanel.addUIElement(removableDModsFooterElement);
