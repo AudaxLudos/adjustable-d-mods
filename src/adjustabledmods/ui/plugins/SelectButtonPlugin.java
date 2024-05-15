@@ -28,43 +28,49 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         if (!(buttonId instanceof HullModSpecAPI)) return;
 
         if (!isInstalled) {
-            this.refitButton.selectedInstallableDMod = (HullModSpecAPI) buttonId;
+            if (!refitButton.selectedInstallableDMods.contains((HullModSpecAPI) buttonId)) {
+                refitButton.selectedInstallableDMods.add((HullModSpecAPI) buttonId);
+            } else {
+                refitButton.selectedInstallableDMods.remove((HullModSpecAPI) buttonId);
+            }
         } else {
-            this.refitButton.selectedRemovableDMod = (HullModSpecAPI) buttonId;
+            if (!refitButton.selectedRemovableDMods.contains((HullModSpecAPI) buttonId)) {
+                refitButton.selectedRemovableDMods.add((HullModSpecAPI) buttonId);
+            } else {
+                refitButton.selectedRemovableDMods.remove((HullModSpecAPI) buttonId);
+            }
         }
 
         LabelAPI costDModText = this.refitButton.costToInstallDModText;
         List<ButtonAPI> dModButtons = this.refitButton.installableDModButtons;
+        List<HullModSpecAPI> selectedDMods = this.refitButton.selectedInstallableDMods;
         ButtonAPI selectedHullModButton = this.refitButton.selectedInstallableDModButton;
         if (isInstalled) {
             costDModText = this.refitButton.costToRemoveDModText;
             dModButtons = this.refitButton.removableDModButtons;
+            selectedDMods = this.refitButton.selectedRemovableDMods;
             selectedHullModButton = this.refitButton.selectedRemovableDModButton;
         }
 
         costDModText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled)));
 
-        boolean anyChecked = false;
         for (ButtonAPI button : dModButtons) {
-            if (button.getCustomData() == buttonId && !button.isHighlighted()) {
-                button.highlight();
-                anyChecked = true;
-                continue;
+            if (!isInstalled) {
+                int dModsLeft = DModManager.MAX_DMODS_FROM_COMBAT - DModManager.getNumDMods(variant);
+                button.setEnabled(selectedDMods.size() < dModsLeft || selectedDMods.contains((HullModSpecAPI) button.getCustomData()));
             }
-            if (button.isHighlighted()) {
+
+            System.out.println("test");
+
+            if (selectedDMods.contains((HullModSpecAPI) button.getCustomData())) {
+                button.highlight();
+            } else {
                 button.unhighlight();
             }
         }
 
-        if (!anyChecked) {
-            this.refitButton.selectedInstallableDMod = null;
-            this.refitButton.selectedRemovableDMod = null;
-            costDModText.setText(Misc.getDGSCredits(0));
-        }
-
         if (selectedHullModButton != null)
-            selectedHullModButton.setEnabled(
-                    (this.refitButton.selectedInstallableDMod != null || this.refitButton.selectedRemovableDMod != null)
+            selectedHullModButton.setEnabled((!this.refitButton.selectedInstallableDMods.isEmpty() || !this.refitButton.selectedRemovableDMods.isEmpty())
                             && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
                             && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled));
     }

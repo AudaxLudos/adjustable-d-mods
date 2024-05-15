@@ -24,18 +24,18 @@ public class RemoveDModTooltip extends BaseTooltipCreator {
 
     @Override
     public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
-        tooltip.addPara("Removing d-mods costs credits and will be more expensive the more d-mods the ship has.", 0f);
-        if (this.refitButton.selectedRemovableDMod == null && DModManager.getNumDMods(variant) > 0) {
-            tooltip.addSpacer(10f);
+        if (this.refitButton.selectedRemovableDMods.isEmpty() && DModManager.getNumDMods(variant) > 0) {
             tooltip.addPara("Select a removable d-mod", Misc.getHighlightColor(), 0f);
-        }
-        if (this.refitButton.selectedRemovableDMod != null && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(variant, true)) {
             tooltip.addSpacer(10f);
+        }
+        if (!this.refitButton.selectedRemovableDMods.isEmpty() && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(variant, true)) {
             tooltip.addPara("Not enough credits", Misc.getNegativeHighlightColor(), 0f);
+            tooltip.addSpacer(10f);
         }
         if (DModManager.getNumDMods(variant) <= 0) {
-            tooltip.addSpacer(10f);
             tooltip.addPara("No d-mods to remove", Misc.getNegativeHighlightColor(), 0f);
+            tooltip.addSpacer(10f);
         }
+        tooltip.addPara("Removing d-mods costs credits and will be more expensive the more d-mods the ship has.", 0f);
     }
 }

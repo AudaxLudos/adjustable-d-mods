@@ -22,24 +22,26 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
         if (!(buttonId instanceof String)) return;
 
         if (buttonId == "install_selected") {
-            if (this.refitButton.selectedInstallableDMod != null) {
-                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, false));
-                HullModSpecAPI spec = this.refitButton.selectedInstallableDMod;
-                DModManager.setDHull(variant);
-                variant.removeSuppressedMod(spec.getId());
-                variant.addPermaMod(spec.getId(), false);
-
+            if (!this.refitButton.selectedInstallableDMods.isEmpty()) {
+//                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, false));
+                for (int i = 0; i < this.refitButton.selectedInstallableDMods.size(); i++) {
+                    HullModSpecAPI dModSpec = this.refitButton.selectedInstallableDMods.get(i);
+                    DModManager.setDHull(variant);
+                    variant.removeSuppressedMod(dModSpec.getId());
+                    variant.addPermaMod(dModSpec.getId(), false);
+                }
                 refitButton.refreshVariant();
                 refitButton.closePanel();
                 Global.getSoundPlayer().playSound("ui_survey_xp_gain", 2f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
             }
         } else if (buttonId == "remove_selected") {
-            if (this.refitButton.selectedRemovableDMod != null) {
-                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, true));
-                HullModSpecAPI spec = this.refitButton.selectedRemovableDMod;
-                DModManager.setDHull(variant);
-                DModManager.removeDMod(variant, spec.getId());
-
+            if (!this.refitButton.selectedRemovableDMods.isEmpty()) {
+//                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, true));
+                for (int i = 0; i < this.refitButton.selectedRemovableDMods.size(); i++) {
+                    HullModSpecAPI spec = this.refitButton.selectedRemovableDMods.get(i);
+                    DModManager.setDHull(variant);
+                    DModManager.removeDMod(variant, spec.getId());
+                }
                 refitButton.refreshVariant();
                 refitButton.closePanel();
                 Global.getSoundPlayer().playSound("ui_survey_xp_gain", 4f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
