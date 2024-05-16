@@ -269,23 +269,20 @@ public class DModRefitButton extends BaseRefitButton {
         return button;
     }
 
-    public float getDModAddOrRemoveCost(ShipVariantAPI variant, boolean isInstalled) {
-        int numDMods = DModManager.getNumDMods(variant);
+    public float getDModAddOrRemoveCost(ShipVariantAPI variant, boolean isInstalled, float offset) {
+        List<HullModSpecAPI> selectedDMods = isInstalled ? this.selectedRemovableDMods : this.selectedInstallableDMods;
         ShipHullSpecAPI hullSpec = variant.getHullSpec().getDParentHull();
         if (hullSpec == null)
             hullSpec = variant.getHullSpec();
 
-        float baseMultiplier = 0.4f;
-        float dModMultiplier = 1.2f;
-        float cost = hullSpec.getBaseValue() * baseMultiplier;
-        for (int i = 0; i < numDMods; i++) {
-            cost *= dModMultiplier;
-        }
+        float maxCost = (float) (hullSpec.getBaseValue() * 1.2f * Math.pow(1.2d, DModManager.MAX_DMODS_FROM_COMBAT));
+        float cost = maxCost * ((selectedDMods.size() + offset) / DModManager.MAX_DMODS_FROM_COMBAT);
 
-        float removalMultiplier = 2f;
-        if (isInstalled)
-            removalMultiplier = 1.5f;
+        float installMult = isInstalled ? 1f : 1.5f;
 
-        return cost * removalMultiplier;
+        if (offset < 0)
+            cost = 0;
+
+        return cost * installMult;
     }
 }

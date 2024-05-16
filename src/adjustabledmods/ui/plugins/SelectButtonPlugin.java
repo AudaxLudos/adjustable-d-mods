@@ -50,7 +50,7 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
             selectedDMods.remove((HullModSpecAPI) buttonId);
         }
 
-        costDModText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled)));
+        costDModText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
 
         for (ButtonAPI button : dModButtons) {
             Utils.setButtonEnabledOrHighlighted(button, true, selectedDMods.contains((HullModSpecAPI) button.getCustomData()));
@@ -65,7 +65,7 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         if (selectedHullModButton != null)
             selectedHullModButton.setEnabled((!selectedDMods.isEmpty())
                             && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
-                            && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled));
+                            && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f));
     }
 
     public boolean isDModsNotInShip(List<HullModSpecAPI> dMods, ShipVariantAPI variant, HullModSpecAPI dMod) {

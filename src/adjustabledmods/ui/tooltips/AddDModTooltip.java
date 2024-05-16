@@ -28,7 +28,7 @@ public class AddDModTooltip extends BaseTooltipCreator {
             tooltip.addPara("Select an installable d-mod", Misc.getHighlightColor(), 0f);
             tooltip.addSpacer(10f);
         }
-        if (!this.refitButton.selectedInstallableDMods.isEmpty() && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(variant, false)) {
+        if (!this.refitButton.selectedInstallableDMods.isEmpty() && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(variant, false, 0f)) {
             tooltip.addPara("Not enough credits", Misc.getNegativeHighlightColor(), 0f);
             tooltip.addSpacer(10f);
         }
