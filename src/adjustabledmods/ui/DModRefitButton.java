@@ -279,6 +279,6 @@ public class DModRefitButton extends BaseRefitButton {
         if (offset < 0)
             cost = 0;
 
-        return cost * installMult;
+        return (float) Math.ceil(cost * installMult);
     }
 }

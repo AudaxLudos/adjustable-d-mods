@@ -2,7 +2,6 @@ package adjustabledmods.ui.plugins;
 
 import adjustabledmods.Utils;
 import adjustabledmods.ui.DModRefitButton;
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
@@ -33,36 +32,36 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         List<HullModSpecAPI> selectedDMods = !isInstalled ? this.refitButton.selectedInstallableDMods : this.refitButton.selectedRemovableDMods;
         ButtonAPI selectedHullModButton = !isInstalled ? this.refitButton.selectedInstallableDModButton : this.refitButton.selectedRemovableDModButton;
 
-        if (!isInstalled) {
-            if (!selectedDMods.contains((HullModSpecAPI) buttonId) &&
-                    (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
-                            isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) buttonId))) {
-                return;
-            }
+        if (!isInstalled && !selectedDMods.contains((HullModSpecAPI) buttonId) &&
+                (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
+                        isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) buttonId))) {
+            return;
         }
 
         if (!selectedDMods.remove((HullModSpecAPI) buttonId)) {
             selectedDMods.add((HullModSpecAPI) buttonId);
         }
 
+        costDModText.setColor(Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)) ? Misc.getHighlightColor() : Misc.getNegativeHighlightColor());
         costDModText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
 
         for (ButtonAPI button : dModButtons) {
-            Utils.setButtonEnabledOrHighlighted(button, true, selectedDMods.contains((HullModSpecAPI) button.getCustomData()));
+            boolean isEnabled = true;
+            boolean isHighlighted = selectedDMods.contains((HullModSpecAPI) button.getCustomData());
 
-            if (!isInstalled) {
-                if (!selectedDMods.contains((HullModSpecAPI) button.getCustomData()) &&
-                        (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
-                                isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) button.getCustomData()))) {
-                    Utils.setButtonEnabledOrHighlighted(button, false, true);
-                }
+            if (!isInstalled && !selectedDMods.contains((HullModSpecAPI) button.getCustomData()) &&
+                    (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
+                            isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) button.getCustomData()))) {
+                isEnabled = false;
+                isHighlighted = true;
             }
+
+            Utils.setButtonEnabledOrHighlighted(button, isEnabled, isHighlighted);
         }
 
         if (selectedHullModButton != null)
-            selectedHullModButton.setEnabled((!selectedDMods.isEmpty())
-                    && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
-                    && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f));
+            selectedHullModButton.setEnabled((!selectedDMods.isEmpty()) && (!Utils.isShipAboveDModLimit(variant) || isInstalled)
+                    && Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
     }
 
     public boolean isDModsNotInShip(List<HullModSpecAPI> dMods, ShipVariantAPI variant, HullModSpecAPI dMod) {

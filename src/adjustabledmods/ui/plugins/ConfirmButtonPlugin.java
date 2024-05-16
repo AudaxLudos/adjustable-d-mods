@@ -23,7 +23,7 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
 
         if (buttonId == "install_selected") {
             if (!this.refitButton.selectedInstallableDMods.isEmpty()) {
-//                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, false));
+                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, false, 0f));
                 for (int i = 0; i < this.refitButton.selectedInstallableDMods.size(); i++) {
                     HullModSpecAPI dModSpec = this.refitButton.selectedInstallableDMods.get(i);
                     DModManager.setDHull(variant);
@@ -36,7 +36,7 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
             }
         } else if (buttonId == "remove_selected") {
             if (!this.refitButton.selectedRemovableDMods.isEmpty()) {
-//                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, true));
+                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, true, 0f));
                 for (int i = 0; i < this.refitButton.selectedRemovableDMods.size(); i++) {
                     HullModSpecAPI spec = this.refitButton.selectedRemovableDMods.get(i);
                     DModManager.setDHull(variant);
