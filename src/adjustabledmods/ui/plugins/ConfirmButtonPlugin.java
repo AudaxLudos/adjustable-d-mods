@@ -19,13 +19,15 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
 
     @Override
     public void buttonPressed(Object buttonId) {
-        if (!(buttonId instanceof String)) return;
+        if (!(buttonId instanceof String)) {
+            return;
+        }
 
         if (buttonId == "install_selected") {
-            if (!this.refitButton.selectedInstallableDMods.isEmpty()) {
+            if (!this.refitButton.installSelectedDMods.isEmpty()) {
                 Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, false, 0f));
-                for (int i = 0; i < this.refitButton.selectedInstallableDMods.size(); i++) {
-                    HullModSpecAPI dModSpec = this.refitButton.selectedInstallableDMods.get(i);
+                for (int i = 0; i < this.refitButton.installSelectedDMods.size(); i++) {
+                    HullModSpecAPI dModSpec = this.refitButton.installSelectedDMods.get(i);
                     DModManager.setDHull(variant);
                     variant.removeSuppressedMod(dModSpec.getId());
                     variant.addPermaMod(dModSpec.getId(), false);
@@ -35,10 +37,10 @@ public class ConfirmButtonPlugin extends BaseCustomUIPanelPlugin {
                 Global.getSoundPlayer().playSound("ui_survey_xp_gain", 2f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
             }
         } else if (buttonId == "remove_selected") {
-            if (!this.refitButton.selectedRemovableDMods.isEmpty()) {
+            if (!this.refitButton.removeSelectedDMods.isEmpty()) {
                 Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(this.refitButton.getDModAddOrRemoveCost(variant, true, 0f));
-                for (int i = 0; i < this.refitButton.selectedRemovableDMods.size(); i++) {
-                    HullModSpecAPI spec = this.refitButton.selectedRemovableDMods.get(i);
+                for (int i = 0; i < this.refitButton.removeSelectedDMods.size(); i++) {
+                    HullModSpecAPI spec = this.refitButton.removeSelectedDMods.get(i);
                     DModManager.setDHull(variant);
                     DModManager.removeDMod(variant, spec.getId());
                 }

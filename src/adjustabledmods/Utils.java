@@ -19,10 +19,11 @@ public class Utils {
         button.setHighlightBrightness(0.6f);
         button.setQuickMode(isEnabled);
 
-        if (isHighlighted)
+        if (isHighlighted) {
             button.highlight();
-        else
+        } else {
             button.unhighlight();
+        }
     }
 
     public static boolean isSelectionAboveDModsLimit(List<HullModSpecAPI> hullmods, ShipVariantAPI variant) {
