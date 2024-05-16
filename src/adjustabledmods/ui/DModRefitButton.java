@@ -1,5 +1,6 @@
 package adjustabledmods.ui;
 
+import adjustabledmods.Utils;
 import adjustabledmods.ui.plugins.BorderedPanelPlugin;
 import adjustabledmods.ui.plugins.ConfirmButtonPlugin;
 import adjustabledmods.ui.plugins.SelectButtonPlugin;
@@ -110,8 +111,7 @@ public class DModRefitButton extends BaseRefitButton {
             removableDModsText.getPosition().inTL(columnWidth / 2 - removableDModsText.computeTextWidth(removableDModsText.getText()) / 2, (rowHeight - 25f) / 2 - removableDModsText.computeTextHeight(removableDModsText.getText()) / 2);
         } else {
             for (HullModSpecAPI dMod : installableDMods) {
-                int dModsLeft = DModManager.MAX_DMODS_FROM_COMBAT - DModManager.getNumDMods(variant);
-                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, selectedInstallableDMods.size() < dModsLeft || selectedInstallableDMods.contains(dMod), false);
+                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, !(Utils.isShipAboveDModLimit(variant) || (Utils.isSelectionAboveDModsLimit(selectedInstallableDMods, variant) && selectedInstallableDMods.contains(dMod))), false);
                 installableDModsElement.addCustom(dModPanel, 0f);
             }
         }
@@ -236,10 +236,11 @@ public class DModRefitButton extends BaseRefitButton {
         CustomPanelAPI dModPanel = panel.createCustomPanel(columnWidth, 44f, new SelectButtonPlugin(this, variant, isInstalled));
         TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 44f, false);
         ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 44f, 0f);
-        dModButton.setHighlightBrightness(0.6f);
-        dModButton.setGlowBrightness(0.56f);
-        dModButton.setQuickMode(true);
-        dModButton.setEnabled(isEnabled);
+        if (isEnabled) {
+            Utils.setButtonEnabledOrHighlighted(dModButton, true, false);
+        } else {
+            Utils.setButtonEnabledOrHighlighted(dModButton, false, true);
+        }
         dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
         dModButtonElement.getPosition().setXAlignOffset(-10f);
         dModPanel.addUIElement(dModButtonElement);
