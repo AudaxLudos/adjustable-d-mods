@@ -1,3 +1,10 @@
+### 1.0.6
+- Release 1.0.6
+- Update d-mod refit ui design
+- Update install and removal cost calculations
+- Update d-mod refit ui to allow selection of multiple installable or removable d-mods
+- Update d-mod refit service ui to show current player credits
+
 ### 1.0.3
 - Release 1.0.3
 - Fix bug carrier d-mods not showing up for carriers
