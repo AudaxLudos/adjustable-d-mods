@@ -27,7 +27,7 @@ import java.util.List;
 
 public class DModRefitButton extends BaseRefitButton {
     public final float WIDTH = 760f;
-    public final float HEIGHT = 435f;
+    public final float HEIGHT = 426f;
     public List<ButtonAPI> installableDModButtons = new ArrayList<>();
     public List<ButtonAPI> removableDModButtons = new ArrayList<>();
     public List<HullModSpecAPI> selectedInstallableDMods = new ArrayList<>();
@@ -70,8 +70,8 @@ public class DModRefitButton extends BaseRefitButton {
     @Override
     public void addTooltip(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
         if (market == null) {
-            tooltip.addSpacer(10f);
             tooltip.addPara("Must be docked at a market to perform ship restorations", Misc.getNegativeHighlightColor(), 0f);
+            tooltip.addSpacer(10f);
         }
         tooltip.addPara("Options to install or remove d-mods on a ship", 0f);
     }
@@ -94,9 +94,9 @@ public class DModRefitButton extends BaseRefitButton {
         float rowHeight = 320f;
 
         CustomPanelAPI dModsContainerPanel = backgroundPanel.createCustomPanel(WIDTH, rowHeight, null);
-        TooltipMakerAPI dModsContainerElement = dModsContainerPanel.createUIElement(WIDTH - 10f, rowHeight, false);
+        TooltipMakerAPI dModsContainerElement = dModsContainerPanel.createUIElement(WIDTH, rowHeight, false);
         dModsContainerPanel.addUIElement(dModsContainerElement).inMid();
-        mElement.addCustom(dModsContainerPanel, 15f);
+        mElement.addCustom(dModsContainerPanel, 10f);
 
         CustomPanelAPI installableDModsPanel = backgroundPanel.createCustomPanel(columnWidth, rowHeight, new BorderedPanelPlugin());
         TooltipMakerAPI installableDModsHeader = installableDModsPanel.createUIElement(columnWidth, rowHeight, false);
@@ -137,7 +137,7 @@ public class DModRefitButton extends BaseRefitButton {
             }
         }
         removableDModsPanel.addUIElement(removableDModsElement);
-        dModsContainerElement.addCustom(removableDModsPanel, 0f).getPosition().rightOfTop(installableDModsPanel, 10f);
+        dModsContainerElement.addCustom(removableDModsPanel, 0f).getPosition().rightOfTop(installableDModsPanel, 20f);
 
         // Footer elements
         float footerWidth = WIDTH / 3f;
@@ -236,11 +236,7 @@ public class DModRefitButton extends BaseRefitButton {
         CustomPanelAPI dModPanel = panel.createCustomPanel(columnWidth, 44f, new SelectButtonPlugin(this, variant, isInstalled));
         TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 44f, false);
         ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 44f, 0f);
-        if (isEnabled) {
-            Utils.setButtonEnabledOrHighlighted(dModButton, true, false);
-        } else {
-            Utils.setButtonEnabledOrHighlighted(dModButton, false, true);
-        }
+        Utils.setButtonEnabledOrHighlighted(dModButton, isEnabled, !isEnabled);
         dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModPanel, TooltipMakerAPI.TooltipLocation.RIGHT);
         dModButtonElement.getPosition().setXAlignOffset(-10f);
         dModPanel.addUIElement(dModButtonElement);

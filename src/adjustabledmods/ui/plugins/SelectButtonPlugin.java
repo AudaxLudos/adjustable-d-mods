@@ -28,26 +28,21 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
     public void buttonPressed(Object buttonId) {
         if (!(buttonId instanceof HullModSpecAPI)) return;
 
-        LabelAPI costDModText = this.refitButton.costToInstallDModText;
-        List<ButtonAPI> dModButtons = this.refitButton.installableDModButtons;
-        List<HullModSpecAPI> selectedDMods = this.refitButton.selectedInstallableDMods;
-        ButtonAPI selectedHullModButton = this.refitButton.selectedInstallableDModButton;
+        LabelAPI costDModText = !isInstalled ? this.refitButton.costToInstallDModText : this.refitButton.costToRemoveDModText;
+        List<ButtonAPI> dModButtons = !isInstalled ? this.refitButton.installableDModButtons : this.refitButton.removableDModButtons;
+        List<HullModSpecAPI> selectedDMods = !isInstalled ? this.refitButton.selectedInstallableDMods : this.refitButton.selectedRemovableDMods;
+        ButtonAPI selectedHullModButton = !isInstalled ? this.refitButton.selectedInstallableDModButton : this.refitButton.selectedRemovableDModButton;
 
         if (!isInstalled) {
-            if (Utils.isShipAboveDModLimit(variant)) return;
-            if (Utils.isSelectionAboveDModsLimit(selectedDMods, variant) && !selectedDMods.contains((HullModSpecAPI) buttonId)) return;
-            if (isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) buttonId) && !selectedDMods.contains((HullModSpecAPI) buttonId)) return;
-        } else {
-            costDModText = this.refitButton.costToRemoveDModText;
-            dModButtons = this.refitButton.removableDModButtons;
-            selectedDMods = this.refitButton.selectedRemovableDMods;
-            selectedHullModButton = this.refitButton.selectedRemovableDModButton;
+            if (!selectedDMods.contains((HullModSpecAPI) buttonId) &&
+                    (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
+                            isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) buttonId))) {
+                return;
+            }
         }
 
-        if (!selectedDMods.contains((HullModSpecAPI) buttonId)) {
+        if (!selectedDMods.remove((HullModSpecAPI) buttonId)) {
             selectedDMods.add((HullModSpecAPI) buttonId);
-        } else {
-            selectedDMods.remove((HullModSpecAPI) buttonId);
         }
 
         costDModText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
@@ -55,17 +50,19 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         for (ButtonAPI button : dModButtons) {
             Utils.setButtonEnabledOrHighlighted(button, true, selectedDMods.contains((HullModSpecAPI) button.getCustomData()));
 
-            if (!isInstalled)
-                if (Utils.isShipAboveDModLimit(variant)
-                        || (Utils.isSelectionAboveDModsLimit(selectedDMods, variant) && !selectedDMods.contains((HullModSpecAPI) button.getCustomData()))
-                        || isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) button.getCustomData()) && !selectedDMods.contains((HullModSpecAPI) button.getCustomData()))
+            if (!isInstalled) {
+                if (!selectedDMods.contains((HullModSpecAPI) button.getCustomData()) &&
+                        (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
+                                isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) button.getCustomData()))) {
                     Utils.setButtonEnabledOrHighlighted(button, false, true);
+                }
+            }
         }
 
         if (selectedHullModButton != null)
             selectedHullModButton.setEnabled((!selectedDMods.isEmpty())
-                            && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
-                            && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f));
+                    && (DModManager.getNumDMods(variant) < DModManager.MAX_DMODS_FROM_COMBAT || isInstalled)
+                    && Global.getSector().getPlayerFleet().getCargo().getCredits().get() >= this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f));
     }
 
     public boolean isDModsNotInShip(List<HullModSpecAPI> dMods, ShipVariantAPI variant, HullModSpecAPI dMod) {
