@@ -26,39 +26,39 @@ public class DModTooltip extends BaseTooltipCreator {
 
     @Override
     public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
-        tooltip.addPara(spec.getDisplayName(), Misc.getBasePlayerColor(), 0f);
+        tooltip.addPara(this.spec.getDisplayName(), Misc.getBasePlayerColor(), 0f);
         tooltip.addSpacer(10f);
-        if (!Objects.equals(spec.getManufacturer(), "Common")) {
+        if (!Objects.equals(this.spec.getManufacturer(), "Common")) {
             tooltip.addPara(
                     "Design Type: %s",
                     0f,
                     Misc.getGrayColor(),
-                    Misc.getDesignTypeColor(spec.getManufacturer()),
-                    spec.getManufacturer()
+                    Misc.getDesignTypeColor(this.spec.getManufacturer()),
+                    this.spec.getManufacturer()
             );
             tooltip.addSpacer(10f);
         }
 
         tooltip.addPara(
-                spec.getDescriptionFormat(),
+                this.spec.getDescriptionFormat(),
                 0f,
                 Misc.getTextColor(),
                 Misc.getHighlightColor(),
-                spec.getEffect().getDescriptionParam(0, hullSize, ship),
-                spec.getEffect().getDescriptionParam(1, hullSize, ship),
-                spec.getEffect().getDescriptionParam(2, hullSize, ship),
-                spec.getEffect().getDescriptionParam(3, hullSize, ship),
-                spec.getEffect().getDescriptionParam(4, hullSize, ship),
-                spec.getEffect().getDescriptionParam(5, hullSize, ship),
-                spec.getEffect().getDescriptionParam(6, hullSize, ship),
-                spec.getEffect().getDescriptionParam(7, hullSize, ship),
-                spec.getEffect().getDescriptionParam(8, hullSize, ship),
-                spec.getEffect().getDescriptionParam(9, hullSize, ship)
+                this.spec.getEffect().getDescriptionParam(0, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(1, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(2, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(3, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(4, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(5, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(6, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(7, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(8, this.hullSize, this.ship),
+                this.spec.getEffect().getDescriptionParam(9, this.hullSize, this.ship)
         );
 
-        spec.getEffect().addPostDescriptionSection(
+        this.spec.getEffect().addPostDescriptionSection(
                 tooltip,
-                hullSize,
+                this.hullSize,
                 null,
                 getTooltipWidth(tooltip),
                 false

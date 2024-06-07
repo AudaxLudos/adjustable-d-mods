@@ -26,8 +26,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DModRefitButton extends BaseRefitButton {
-    public final float WIDTH = 760f;
-    public final float HEIGHT = 425f;
+    public static final float WIDTH = 760f;
+    public static final float HEIGHT = 425f;
     public List<ButtonAPI> installDModButtons = new ArrayList<>();
     public List<ButtonAPI> removeDModButtons = new ArrayList<>();
     public List<HullModSpecAPI> installSelectedDMods = new ArrayList<>();
@@ -111,7 +111,7 @@ public class DModRefitButton extends BaseRefitButton {
             removableDModsText.getPosition().inTL(columnWidth / 2 - removableDModsText.computeTextWidth(removableDModsText.getText()) / 2, (rowHeight - 25f) / 2 - removableDModsText.computeTextHeight(removableDModsText.getText()) / 2);
         } else {
             for (HullModSpecAPI dMod : installableDMods) {
-                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, !(Utils.isShipAboveDModLimit(variant) || (Utils.isSelectionAboveDModsLimit(installSelectedDMods, variant) && installSelectedDMods.contains(dMod))), false);
+                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, !(Utils.isShipAboveDModLimit(variant) || (Utils.isSelectionAboveDModsLimit(this.installSelectedDMods, variant) && this.installSelectedDMods.contains(dMod))), false);
                 installableDModsElement.addCustom(dModPanel, 0f);
             }
         }

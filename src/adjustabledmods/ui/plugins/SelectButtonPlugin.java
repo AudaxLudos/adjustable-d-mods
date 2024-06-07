@@ -28,15 +28,14 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         if (!(buttonId instanceof HullModSpecAPI)) {
             return;
         }
+        LabelAPI costText = !this.isInstalled ? this.refitButton.installCostText : this.refitButton.removeCostText;
+        List<ButtonAPI> dModButtons = !this.isInstalled ? this.refitButton.installDModButtons : this.refitButton.removeDModButtons;
+        List<HullModSpecAPI> selectedDMods = !this.isInstalled ? this.refitButton.installSelectedDMods : this.refitButton.removeSelectedDMods;
+        ButtonAPI confirmButton = !this.isInstalled ? this.refitButton.installDModButton : this.refitButton.removeDModButton;
 
-        LabelAPI costText = !isInstalled ? this.refitButton.installCostText : this.refitButton.removeCostText;
-        List<ButtonAPI> dModButtons = !isInstalled ? this.refitButton.installDModButtons : this.refitButton.removeDModButtons;
-        List<HullModSpecAPI> selectedDMods = !isInstalled ? this.refitButton.installSelectedDMods : this.refitButton.removeSelectedDMods;
-        ButtonAPI confirmButton = !isInstalled ? this.refitButton.installDModButton : this.refitButton.removeDModButton;
-
-        if (!isInstalled && !selectedDMods.contains((HullModSpecAPI) buttonId) &&
-                (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
-                        isDModsNotInShip(selectedDMods, variant, (HullModSpecAPI) buttonId))) {
+        if (!this.isInstalled && !selectedDMods.contains((HullModSpecAPI) buttonId) &&
+                (Utils.isShipAboveDModLimit(this.variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, this.variant) ||
+                        isDModsNotInShip(selectedDMods, this.variant, (HullModSpecAPI) buttonId))) {
             return;
         }
 
@@ -47,15 +46,15 @@ public class SelectButtonPlugin extends BaseCustomUIPanelPlugin {
         for (ButtonAPI button : dModButtons) {
             HullModSpecAPI buttonCustomData = (HullModSpecAPI) button.getCustomData();
             boolean isSelected = selectedDMods.contains(buttonCustomData);
-            boolean isEnabled = !(!isInstalled && !isSelected &&
-                    (Utils.isShipAboveDModLimit(variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, variant) ||
-                            isDModsNotInShip(selectedDMods, variant, buttonCustomData)));
+            boolean isEnabled = !(!this.isInstalled && !isSelected &&
+                    (Utils.isShipAboveDModLimit(this.variant) || Utils.isSelectionAboveDModsLimit(selectedDMods, this.variant) ||
+                            isDModsNotInShip(selectedDMods, this.variant, buttonCustomData)));
             Utils.setButtonEnabledOrHighlighted(button, isEnabled, isSelected || !isEnabled);
         }
 
-        costText.setColor(Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)) ? Misc.getHighlightColor() : Misc.getNegativeHighlightColor());
-        costText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
-        confirmButton.setEnabled((!selectedDMods.isEmpty()) && (!Utils.isShipAboveDModLimit(variant) || isInstalled) && Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(variant, isInstalled, 0f)));
+        costText.setColor(Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(this.variant, this.isInstalled, 0f)) ? Misc.getHighlightColor() : Misc.getNegativeHighlightColor());
+        costText.setText(Misc.getDGSCredits(this.refitButton.getDModAddOrRemoveCost(this.variant, this.isInstalled, 0f)));
+        confirmButton.setEnabled((!selectedDMods.isEmpty()) && (!Utils.isShipAboveDModLimit(this.variant) || this.isInstalled) && Utils.canPlayerAffordCost(this.refitButton.getDModAddOrRemoveCost(this.variant, this.isInstalled, 0f)));
     }
 
     public boolean isDModsNotInShip(List<HullModSpecAPI> dMods, ShipVariantAPI variant, HullModSpecAPI dMod) {

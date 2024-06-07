@@ -24,15 +24,15 @@ public class RemoveDModTooltip extends BaseTooltipCreator {
 
     @Override
     public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
-        if (this.refitButton.removeSelectedDMods.isEmpty() && DModManager.getNumDMods(variant) > 0) {
+        if (this.refitButton.removeSelectedDMods.isEmpty() && DModManager.getNumDMods(this.variant) > 0) {
             tooltip.addPara("Select a removable d-mod", Misc.getHighlightColor(), 0f);
             tooltip.addSpacer(10f);
         }
-        if (!this.refitButton.removeSelectedDMods.isEmpty() && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(variant, true, 0f)) {
+        if (!this.refitButton.removeSelectedDMods.isEmpty() && Global.getSector().getPlayerFleet().getCargo().getCredits().get() <= this.refitButton.getDModAddOrRemoveCost(this.variant, true, 0f)) {
             tooltip.addPara("Not enough credits", Misc.getNegativeHighlightColor(), 0f);
             tooltip.addSpacer(10f);
         }
-        if (DModManager.getNumDMods(variant) <= 0) {
+        if (DModManager.getNumDMods(this.variant) <= 0) {
             tooltip.addPara("No d-mods to remove", Misc.getNegativeHighlightColor(), 0f);
             tooltip.addSpacer(10f);
         }
