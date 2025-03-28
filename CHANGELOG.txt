@@ -1,3 +1,10 @@
+### 1.0.7c
+- Release 1.0.7c
+- Update GitHub actions script
+- Update game version to 0.98a from 0.97a
+- Update java version to 17 from 7 and jar file
+- Update dmod refit button order
+
 ### 1.0.6
 - Release 1.0.6
 - Update d-mod refit ui design
