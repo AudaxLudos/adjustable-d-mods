@@ -1,3 +1,7 @@
+### 1.0.7d
+- Release 1.0.7d
+- Fix getTravelDrive null pointer error
+
 ### 1.0.7c
 - Release 1.0.7c
 - Update GitHub actions script
