@@ -8,7 +8,10 @@ import adjustabledmods.ui.tooltips.AddDModTooltip;
 import adjustabledmods.ui.tooltips.DModTooltip;
 import adjustabledmods.ui.tooltips.RemoveDModTooltip;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.FleetDataAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.combat.CombatFleetManagerAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -111,7 +114,7 @@ public class DModRefitButton extends BaseRefitButton {
             removableDModsText.getPosition().inTL(columnWidth / 2 - removableDModsText.computeTextWidth(removableDModsText.getText()) / 2, (rowHeight - 25f) / 2 - removableDModsText.computeTextHeight(removableDModsText.getText()) / 2);
         } else {
             for (HullModSpecAPI dMod : installableDMods) {
-                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, !(Utils.isShipAboveDModLimit(variant) || (Utils.isSelectionAboveDModsLimit(this.installSelectedDMods, variant) && this.installSelectedDMods.contains(dMod))), false);
+                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, member,variant, !(Utils.isShipAboveDModLimit(variant) || (Utils.isSelectionAboveDModsLimit(this.installSelectedDMods, variant) && this.installSelectedDMods.contains(dMod))), false);
                 installableDModsElement.addCustom(dModPanel, 0f);
             }
         }
@@ -132,7 +135,7 @@ public class DModRefitButton extends BaseRefitButton {
             removableDModsText.getPosition().inTL(columnWidth / 2 - removableDModsText.computeTextWidth(removableDModsText.getText()) / 2, (rowHeight - 25f) / 2 - removableDModsText.computeTextHeight(removableDModsText.getText()) / 2);
         } else {
             for (HullModSpecAPI dMod : removableDMods) {
-                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, variant, true, true);
+                CustomPanelAPI dModPanel = addDModButton(backgroundPanel, dMod, member,variant, true, true);
                 removableDModsElement.addCustom(dModPanel, 0f);
             }
         }
@@ -235,14 +238,16 @@ public class DModRefitButton extends BaseRefitButton {
         return text;
     }
 
-    public CustomPanelAPI addDModButton(CustomPanelAPI panel, HullModSpecAPI dMod, ShipVariantAPI variant, Boolean isEnabled, Boolean isInstalled) {
+    public CustomPanelAPI addDModButton(CustomPanelAPI panel, HullModSpecAPI dMod, FleetMemberAPI member, ShipVariantAPI variant, Boolean isEnabled, Boolean isInstalled) {
         float columnWidth = WIDTH / 2f - 20f;
 
         CustomPanelAPI dModPanel = panel.createCustomPanel(columnWidth, 44f, new SelectButtonPlugin(this, variant, isInstalled));
         TooltipMakerAPI dModButtonElement = dModPanel.createUIElement(columnWidth, 44f, false);
         ButtonAPI dModButton = dModButtonElement.addButton("", dMod, new Color(0, 195, 255, 190), new Color(0, 0, 0, 255), Alignment.MID, CutStyle.NONE, columnWidth, 44f, 0f);
         Utils.setButtonEnabledOrHighlighted(dModButton, isEnabled, !isEnabled);
-        dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), Global.getCombatEngine().createFXDrone(variant)), dModButton, TooltipMakerAPI.TooltipLocation.RIGHT);
+        CombatFleetManagerAPI manager = Global.getCombatEngine().getFleetManager(member.getOwner());
+        ShipAPI ship = manager.getShipFor(member);
+        dModButtonElement.addTooltipTo(new DModTooltip(dMod, variant.getHullSize(), ship), dModButton, TooltipMakerAPI.TooltipLocation.RIGHT);
         dModButtonElement.getPosition().setXAlignOffset(-10f);
         dModPanel.addUIElement(dModButtonElement);
 
